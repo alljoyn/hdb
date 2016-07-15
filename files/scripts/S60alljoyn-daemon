@@ -1,0 +1,28 @@
+#!/bin/sh
+
+case "$1" in
+	start)
+		echo -n "Starting alljoyn-daemon: "
+		start-stop-daemon -S -m -p /var/run/alljoyn-daemon.pid -b -x /usr/bin/alljoyn-daemon
+		echo "OK"
+	;;
+	stop)
+		echo -n "Stopping alljoyn-daemon: "
+		start-stop-daemon -K -p /var/run/alljoyn-daemon.pid
+		echo "OK"
+	;;
+	restart|reload)
+		echo -n "Stopping alljoyn-daemon: "
+		start-stop-daemon -K -p /var/run/alljoyn-daemon.pid
+		echo "OK"
+		sleep 1
+		echo -n "Starting alljoyn-daemon: "
+		start-stop-daemon -S -m -p /var/run/alljoyn-daemon.pid -b -x /usr/bin/alljoyn-daemon
+		echo "OK"
+	;;
+	*)
+		echo "Usage: $0 {start|stop|restart|reload}"
+		exit 1
+esac
+
+exit $?

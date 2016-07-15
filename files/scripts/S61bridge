@@ -1,0 +1,45 @@
+#!/bin/sh
+
+case "$1" in
+	start)
+		sleep 1
+		echo -n "Starring adapter: "
+		start-stop-daemon -S -m -p /var/run/adapter.pid -b -x /usr/bin/adapter
+		echo "OK"
+		sleep 1
+		echo -n "Starting bridge: "
+		start-stop-daemon -S -m -p /var/run/bridge.pid -b -x /usr/bin/bridge
+		echo "OK"
+	;;
+	stop)
+		echo -n "Stopping adapter: "
+		start-stop-daemon -K -p /var/run/adapter.pid
+		echo "OK"
+		sleep 1
+		echo -n "Stopping bridge: "
+		start-stop-daemon -K -p /var/run/bridge.pid
+		echo "OK"
+	;;
+	restart|reload)
+		echo -n "Stopping adapter: "
+		start-stop-daemon -K -p /var/run/adapter.pid
+		echo "OK"
+		sleep 1
+		echo -n "Stopping bridge: "
+		start-stop-daemon -K -p /var/run/bridge.pid
+		echo "OK"
+		sleep 1
+		echo -n "Starting adapter: "
+		start-stop-daemon -S -m -p /var/run/adapter.pid -b -x /usr/bin/adapter
+		echo "OK"
+		sleep 1
+		echo -n "Starting bridge: "
+		start-stop-daemon -S -m -p /var/run/bridge.pid -b -x /usr/bin/bridge
+		echo "OK"
+	;;
+	*)
+		echo "Usage: $0 {start|stop|restart|reload}"
+		exit 1
+esac
+
+exit $?
